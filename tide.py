@@ -204,8 +204,13 @@ class TideModel(nn.Module):
                  tempor_hidden_dim=0, dropout_rate=0.2, use_revin=True, use_layernorm=True):
         super().__init__()
         self.revin = RevIN(input_dim) if use_revin else nn.Identity()
-        self.feedin = ContactIn_Encoder(...)
-        self.stepout = StackOut_Decoder(...)
+
+        self.feedin = ContactIn_Encoder(seq_len, pred_len, lookback_dim, covariate_dimr, attrib_dimr,
+                                        encoder_output_dim, encoder_intmlp_dims, encoder_hidden_dims,
+                                        projector_output_dim, projector_hidden_dim, dropout_rate, revin, use_layernorm)
+        self.stepout = StackOut_Decoder(seq_len, pred_len, lookback_dim, encoder_output_dim, projector_output_dim,
+                                        decoder_output_dim, decoder_intmlp_dims, decoder_hidden_dims, tempor_hidden_dim,
+                                        dropout_rate, use_layernorm)
 
     def forward(self, lookback, covariate, attrib):
         '`inputs` 包含过去数据、未来特征和时间序列索引'
